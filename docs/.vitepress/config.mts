@@ -10,6 +10,10 @@ const ENTRIES_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '../entries
  * 从条目文件的 frontmatter 里取 title，不另存一份清单——新加一条案例，
  * 侧边栏自动多一行，不用回来改这里。文件名排序就是条号顺序。
  * 案例多起来之后按行业或结局分组的话，在这个函数里分，别在正文里加字段。
+ *
+ * 每行前面带序号（01、02……），取自文件名开头的数字（`001-清研微视破产清算.md`
+ * → 01），2026-10-07 用户要的：「方便以后看序号是第几个」。
+ * 只补到两位，过百就自然变成三位，不用改这里。
  */
 function caseItems() {
   return readdirSync(ENTRIES_DIR)
@@ -20,7 +24,14 @@ function caseItems() {
       const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(raw)
       const title = fm && /^title:[ \t]*(.+?)[ \t]*$/m.exec(fm[1])?.[1]
       const name = f.replace(/\.md$/, '')
-      return { text: title || name, link: `/entries/${name}` }
+      const label = title || name
+      const seq = /^(\d+)/.exec(name)?.[1]
+      return {
+        text: seq ? `${String(Number(seq)).padStart(2, '0')} ${label}` : label,
+        link: `/entries/${name}`,
+        // 页脚「上一条 / 下一条」用的是 text，不另给的话序号也跟着过去
+        docFooterText: label,
+      }
     })
 }
 
