@@ -8,7 +8,7 @@ export default defineConfig({
   lang: 'zh-CN',
   // title 决定两处：导航栏左侧的名字，和浏览器标签页的「页面名 | 站名」
   title: '公司败局案例集',
-  description: '公司败局案例集 —— 创业错题集。只讲可查证的事实，只列能用的避坑清单。',
+  description: '公司败局案例集。每期解剖一家真实倒闭的公司，讲可查证的事实，写能用的避坑清单。',
   lastUpdated: true,
   cleanUrls: true,
   // 下划线开头的文件（模板）不进站点
@@ -71,7 +71,7 @@ export default defineConfig({
     externalLinkIcon: true,
 
     footer: {
-      message: '只讲可查证的事实，只列能用的避坑清单。',
+      message: '讲可查证的事实，写能用的避坑清单。',
       copyright: '不写成功学，只写失败学。',
     },
   },
