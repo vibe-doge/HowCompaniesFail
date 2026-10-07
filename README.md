@@ -48,7 +48,7 @@ npm run check      # 校验条目格式
 
 复制 `docs/entries/_模板.md`，改名成 `NNN-公司名.md`，照模板填。
 
-格式规则写在 [CLAUDE.md](CLAUDE.md)，`npm run check` 会校验字段、七节顺序、免责声明是否逐字等于模板、避坑清单是不是正好 5 条，还会拦住正文里冒出来的「第 N 张」。
+格式规则写在 [CLAUDE.md](CLAUDE.md)，`npm run check` 会校验字段、七节顺序、免责声明是否逐字等于模板、避坑清单是不是正好 5 条，还会拦住正文里冒出来的「第 N 张」和问号（全篇写陈述句，不向读者发问）。
 
 ## 写作 skill
 
