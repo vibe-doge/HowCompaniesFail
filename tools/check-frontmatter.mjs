@@ -7,7 +7,8 @@
 //   2. 枚举字段的取值在允许范围内
 //   3. checked 是合法的 YYYY-MM-DD
 //   4. industry 是自由填的，只查非空
-//   5. frontmatter 的 title 和正文的一级标题逐字一致
+//   5. frontmatter 的 title 和正文的一级标题对得上，一级标题前面带条号
+//      （`# 01 清华系独角兽破产，90亿估值只剩90万`），条号取自文件名
 //   6. 固定七节都在，顺序没乱
 //   7. 免责声明逐字等于固定模板，且不含具体媒体名称
 // 外加两条：
@@ -116,15 +117,19 @@ for (const file of files) {
     problems.push(`${where}：\`title\` 超过 20 字（现在 ${[...fm.title].length} 字）`)
   }
 
-  // title 和一级标题逐字一致
+  // title 和一级标题逐字一致，一级标题前面还要带条号。
+  // 条号跟左侧目录用的是同一套：取文件名开头的数字，补成两位
+  // （`001-清研微视破产清算.md` → `01`）。2026-10-07 用户定。
+  const seq = /^(\d+)/.exec(file)?.[1]
+  const wantH1 = seq ? `${String(Number(seq)).padStart(2, '0')} ${fm.title}` : fm.title
   const h1 = /^#\s+(.+?)\s*$/m.exec(body)
   if (!h1) {
     problems.push(`${where}：正文里没有一级标题（# …）`)
-  } else if (fm.title && h1[1] !== fm.title) {
+  } else if (fm.title && h1[1] !== wantH1) {
     problems.push(
-      `${where}：frontmatter 的 title 和一级标题对不上\n` +
-        `        frontmatter: ${fm.title}\n` +
-        `        一级标题  : ${h1[1]}`,
+      `${where}：一级标题应该是「${wantH1}」\n` +
+        `        （条号取自文件名开头的数字，后面接 frontmatter 的 title）\n` +
+        `        实为: ${h1[1]}`,
     )
   }
 
