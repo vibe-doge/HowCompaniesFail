@@ -1,5 +1,5 @@
 # 构建 VitePress 站点并发到 GitHub Pages。
-# 地址：https://serendipitydevin.github.io/HowCompaniesFail/
+# 地址：https://vibe-doge.github.io/HowCompaniesFail/
 #
 # 第一次跑的时候，configure-pages 的 enablement: true 会自动把仓库的
 # Pages 打开（Settings → Pages → Source 变成 GitHub Actions），不用手动点。

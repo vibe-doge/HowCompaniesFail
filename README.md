@@ -27,7 +27,7 @@
 
 ## 站点
 
-**https://serendipitydevin.github.io/HowCompaniesFail/**
+**https://vibe-doge.github.io/HowCompaniesFail/**
 
 - **错题集**（`/entries/`）—— 按阶段、风险类型、损失量级、后果、证据等级交叉筛选
 - **收录标准与立场**（`/about`）—— 证据分级怎么定、引什么来源、不做什么

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  // 部署在 https://serendipitydevin.github.io/HowCompaniesFail/ 这个子路径下，
+  // 部署在 https://vibe-doge.github.io/HowCompaniesFail/ 这个子路径下，
   // base 不对的话站点能打开但 CSS/JS 全 404。换自定义域名时把它改成 '/'。
   base: '/HowCompaniesFail/',
 
