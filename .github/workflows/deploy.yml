@@ -1,8 +1,8 @@
 # 构建 VitePress 站点并发到 GitHub Pages。
-# 地址：https://vibe-doge.github.io/
+# 地址：https://vibe-doge.github.io/HowCompaniesFail/
 #
-# 仓库名就是 vibe-doge.github.io（用户站点），所以发布在根路径上，
-# config.mts 里的 base 必须是 '/'。改回项目仓库名的话 base 要跟着改成 '/仓库名/'。
+# 仓库名是 HowCompaniesFail（项目站点），发布在 /HowCompaniesFail/ 子路径下，
+# config.mts 里的 base 必须是 '/HowCompaniesFail/'。仓库改名或换自定义域名时，base 要跟着改。
 #
 # 第一次跑的时候，configure-pages 的 enablement: true 会自动把仓库的
 # Pages 打开（Settings → Pages → Source 变成 GitHub Actions），不用手动点。

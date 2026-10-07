@@ -1,11 +1,15 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  // 仓库名就是 vibe-doge.github.io，GitHub 把「仓库名 = 用户名.github.io」的仓库
-  // 发布在根路径上（2026-10-07 从 HowCompaniesFail 改名过来，就是为了让
-  // vibe-doge.github.io/entries/xxx 这种短地址能点开）。
-  // base 不对的话站点能打开但 CSS/JS 全 404。换自定义域名时这里仍是 '/'。
-  base: '/',
+  // 仓库名 HowCompaniesFail，是项目站点，GitHub 把它挂在 /HowCompaniesFail/ 子路径下，
+  // 所以 base 必须是 '/HowCompaniesFail/'。
+  // 2026-10-07 走过一段弯路：为了拿到根路径短地址，仓库临时改名成
+  // vibe-doge.github.io、base 设成 '/'。当天用户又改回来了——仓库名见名知意
+  // 比地址短一截重要，另一本 HowToLiveBetter 也是这个形状
+  // （eternity4719.github.io/HowToLiveBetter/）。
+  // 只有绑了自定义域名才能同时要名字和根路径，那时 base 再改回 '/'。
+  // base 不对的话站点能打开但 CSS/JS 全 404。
+  base: '/HowCompaniesFail/',
 
   lang: 'zh-CN',
   // title 决定两处：导航栏左侧的名字，和浏览器标签页的「页面名 | 站名」
