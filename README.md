@@ -52,14 +52,25 @@ npm run check      # 校验条目格式
 
 ## 写作 skill
 
-`.claude/skills/company-failure-longform/` 是写这类长文的方法总结：
+仓库自带两个 skill，放在 `.claude/skills/` 下，用 Claude Code 打开这个仓库时自动可见：
+
+**`company-failure-longform/`** —— 写这类长文的方法总结，本仓库自己的：
 
 - `SKILL.md` —— 七节结构、深度从哪来的七个动作、写作禁令、去 AI 味清单、发布前自检
 - `references/exemplar-annotated.md` —— 一篇成品逐段拆解
 - `references/anti-patterns.md` —— 真实改过的 AI 味与结构病，改写前后对照
 
-用 Claude Code 打开这个仓库时它自动可见。产出是文章；封面文案和标签那套在小红书的生产 skill 里，不在这个仓库。
+**`humanizer-zh/`** —— 通用去 AI 味清单，**搬进来的第三方 skill**，不是本仓库原创的：
+
+- 上游 [op7418/Humanizer-zh](https://github.com/op7418/Humanizer-zh)，作者歸藏，MIT
+- 版权和许可原文在同目录的 `LICENSE` 里，跟着一起搬过来了
+- 来龙去脉、更新办法、本项目的两处豁免写在同目录的 `README.md`
+
+产出是文章；封面文案和标签那套在小红书的生产 skill 里，不在这个仓库。
 
 ## 许可
 
 [MIT](LICENSE)。拿去用、改、转载、商用都行，保留版权声明即可。
+
+**例外**：`.claude/skills/humanizer-zh/` 是第三方作品，版权归原作者歸藏，
+按它自己的 MIT 许可分发（见该目录的 `LICENSE`），不适用上面这个版权行。

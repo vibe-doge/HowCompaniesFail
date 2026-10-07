@@ -127,7 +127,8 @@ description: 把一家公司的失败案例写成一篇有思想深度的分析�
 
 ## 去 AI 味
 
-对照 `humanizer-zh` 的清单（源自维基百科 Signs of AI writing）。这个账号实际犯过、要重点查的：
+对照 `.claude/skills/humanizer-zh/SKILL.md` 的清单（源自维基百科 Signs of AI writing，
+搬进来的第三方 skill）。这个账号实际犯过、要重点查的：
 
 | 别写 | 改成 |
 |---|---|

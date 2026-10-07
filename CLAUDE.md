@@ -156,7 +156,7 @@ checked: 2026-10-07
 | **结尾给一个判断，不给一个人生道理** | 给读者一句能带走、能用在下一家公司身上的判断句 |
 
 **不许学的**：造术语充深度、把话说得比证据大、结尾上升到时代和人性。
-本站的冷峻口语化规矩一条不让（`~/.claude/skills/humanizer-zh`）。
+本站的冷峻口语化规矩一条不让（`.claude/skills/humanizer-zh/`，搬进来的第三方 skill）。
 深度来自因果链的完整，不来自词汇的昂贵。
 
 **判据**：写完把「为什么会走到这一步」和「这套判断能用在哪儿」两节单独抽出来读。
@@ -219,7 +219,8 @@ checked: 2026-10-07
 
 ### 去 AI 味（对照 humanizer-zh）
 
-按 `~/.claude/skills/humanizer-zh` 的清单查（源自维基百科 Signs of AI writing）。
+按 `.claude/skills/humanizer-zh/SKILL.md` 的清单查（上游是 `op7418/Humanizer-zh`，
+MIT，2026-10-07 搬进本仓库，来历见那个目录的 `README.md`。内容源自维基百科 Signs of AI writing）。
 2026-10-07 拿它扫了全站，改掉五类：
 
 | 别写 | 改成 |
