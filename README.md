@@ -14,7 +14,7 @@
 
 ## 站点
 
-**https://vibe-doge.github.io/HowCompaniesFail/**
+**https://vibe-doge.github.io/**
 
 - **错题集**（`/entries/`）—— 按光环、行业、结局三个维度交叉筛选
 - **收录标准与立场**（`/about`）—— 来源怎么分档、引什么、不做什么

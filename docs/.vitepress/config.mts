@@ -1,9 +1,11 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  // 部署在 https://vibe-doge.github.io/HowCompaniesFail/ 这个子路径下，
-  // base 不对的话站点能打开但 CSS/JS 全 404。换自定义域名时把它改成 '/'。
-  base: '/HowCompaniesFail/',
+  // 仓库名就是 vibe-doge.github.io，GitHub 把「仓库名 = 用户名.github.io」的仓库
+  // 发布在根路径上（2026-10-07 从 HowCompaniesFail 改名过来，就是为了让
+  // vibe-doge.github.io/entries/xxx 这种短地址能点开）。
+  // base 不对的话站点能打开但 CSS/JS 全 404。换自定义域名时这里仍是 '/'。
+  base: '/',
 
   lang: 'zh-CN',
   // title 决定两处：导航栏左侧的名字，和浏览器标签页的「页面名 | 站名」
