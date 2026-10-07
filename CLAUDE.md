@@ -261,10 +261,19 @@ VitePress 会把两个星号原样印在页面上。凡是加粗收尾、后面�
 ## 目录结构
 
 - `docs/entries/` —— 错题正文，一条一个文件。
+- `docs/index.md` —— **站点首页，就是案例目录**，不放欢迎页；左边目录列出全部案例。
 - `docs/` —— VitePress 站点源目录；`docs/.vitepress/` 是站点配置和主题。
 - `tools/` —— 校验脚本。
 - `README.md` —— GitHub 门面，不进站点。
 - `CLAUDE.md` —— 本文件。
+
+**站点是项目站点，挂在 `/HowCompaniesFail/` 子路径下**（仓库名不是 `用户名.github.io`，
+GitHub 就只给子路径）。两条硬规矩：
+
+- `config.mts` 的 `base` 必须是 `/HowCompaniesFail/`，改仓库名或换域名时跟着改。
+- **手写的站内链接要过 `withBase()`**：`createContentLoader` 给的 url 不带前缀，
+  直接当 `href` 用会 404。2026-10-07 就是这么断的（卡片全指到 `/entries/…`）。
+  `npm run check:base` 扫构建产物，没带前缀的就报错，CI 里也跑。
 
 ## 评论区运营
 

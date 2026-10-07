@@ -1,4 +1,28 @@
 import { defineConfig } from 'vitepress'
+import { readdirSync, readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const ENTRIES_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '../entries')
+
+/**
+ * 左侧目录直接列全部案例，一条一个链接。
+ * 从条目文件的 frontmatter 里取 title，不另存一份清单——新加一条案例，
+ * 侧边栏自动多一行，不用回来改这里。文件名排序就是条号顺序。
+ * 案例多起来之后按行业或结局分组的话，在这个函数里分，别在正文里加字段。
+ */
+function caseItems() {
+  return readdirSync(ENTRIES_DIR)
+    .filter(f => f.endsWith('.md') && !f.startsWith('_'))
+    .sort()
+    .map(f => {
+      const raw = readFileSync(resolve(ENTRIES_DIR, f), 'utf8')
+      const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(raw)
+      const title = fm && /^title:[ \t]*(.+?)[ \t]*$/m.exec(fm[1])?.[1]
+      const name = f.replace(/\.md$/, '')
+      return { text: title || name, link: `/entries/${name}` }
+    })
+}
 
 export default defineConfig({
   // 仓库名 HowCompaniesFail，是项目站点，GitHub 把它挂在 /HowCompaniesFail/ 子路径下，
@@ -23,19 +47,18 @@ export default defineConfig({
   head: [['meta', { name: 'theme-color', content: '#b8272c' }]],
 
   themeConfig: {
+    // 站点没有单独的欢迎页，首页就是概要和案例目录，所以导航里那个「首页」省了
     nav: [
-      { text: '首页', link: '/' },
-      { text: '错题集', link: '/entries/' },
+      { text: '案例目录', link: '/' },
       { text: '收录标准', link: '/about' },
     ],
 
+    // 每条案例都进左侧目录，从任何一页都能直接跳到别条
     sidebar: [
+      { text: '案例', items: caseItems() },
       {
-        text: '错题集',
-        items: [
-          { text: '按维度查', link: '/entries/' },
-          { text: '收录标准与立场', link: '/about' },
-        ],
+        text: '关于',
+        items: [{ text: '收录标准与立场', link: '/about' }],
       },
     ],
 

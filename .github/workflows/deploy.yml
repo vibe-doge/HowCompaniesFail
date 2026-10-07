@@ -50,6 +50,12 @@ jobs:
       - name: 构建
         run: npm run build
 
+      # 站内链接必须带 base 前缀，否则线上点进去 404。
+      # 2026-10-07 base 从 '/' 改成 '/HowCompaniesFail/' 时漏改过一处手写的
+      # href，卡片全断，是用户发现的。这一步就是防它再犯。
+      - name: 校验站内链接的 base 前缀
+        run: node tools/check-base-links.mjs
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs/.vitepress/dist

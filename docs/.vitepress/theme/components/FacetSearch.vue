@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { withBase } from 'vitepress'
 import { data as entries } from '../../../entries/entries.data'
+
+// createContentLoader 给的 url 不带 base 前缀（是 '/entries/xxx'）。
+// 站点挂在 /HowCompaniesFail/ 下，直接拿它当 href 会 404，必须过一遍 withBase。
+// 2026-10-07 就是这么断的：卡片点进去 404，加 base 前缀的地址才 200。
 
 const DIMS = [
   { key: 'halo', label: '光环' },
@@ -83,7 +88,7 @@ const hasFilter = computed(() => q.value.trim() !== '' || Object.values(active.v
 
     <ul v-if="filtered.length" class="fs-list">
       <li v-for="e in filtered" :key="e.url" class="fs-card">
-        <a class="fs-title" :href="e.url">{{ e.title }}</a>
+        <a class="fs-title" :href="withBase(e.url)">{{ e.title }}</a>
         <div class="fs-meta">
           <span class="fs-tag">{{ e.halo }}</span>
           <span class="fs-tag">{{ e.industry }}</span>

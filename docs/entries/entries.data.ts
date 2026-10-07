@@ -26,7 +26,8 @@ export default createContentLoader('entries/*.md', {
   transform(raw): Entry[] {
     return raw
       // 只收真正的条目。要排掉两类：
-      //   index.md —— 本节的筛选页，不是条目
+      //   index.md —— 这里以前放过筛选页，现在筛选挪到首页 docs/index.md 了，
+      //               loader 仍会把 entries/index.md 收进来（如果哪天又建一个）
       //   _模板.md —— srcExclude 只挡页面生成，挡不住这个 loader
       .filter(
         ({ url, frontmatter }) =>
