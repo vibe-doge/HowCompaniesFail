@@ -261,18 +261,38 @@ VitePress 会把两个星号原样印在页面上。凡是加粗收尾、后面�
 ## 目录结构
 
 - `docs/entries/` —— 错题正文，一条一个文件。
-- `docs/index.md` —— **站点首页，就是案例目录**，不放欢迎页；左边目录列出全部案例。
+- `docs/index.md` —— **站点首页，只有一段概要**，不放欢迎页，也不放筛选器或文章列表。
+- `docs/about.md` —— 收录标准与立场。
 - `docs/` —— VitePress 站点源目录；`docs/.vitepress/` 是站点配置和主题。
 - `tools/` —— 校验脚本。
 - `README.md` —— GitHub 门面，不进站点。
 - `CLAUDE.md` —— 本文件。
 
+### 站点的样子（2026-10-07 用户定，照 HowToLiveBetter 那本来）
+
+**顶栏不放 nav**，只有站名和搜索框。左边目录分两组：「文章」列出全部案例（`config.mts`
+的 `caseItems()` 构建时读 frontmatter 的 title 生成，新加一条自动多一行），
+「收录标准」指向 `/about`。首页就一段概要，读完就能点左边的文章。
+
+用户原话：「文章。收录标准都放侧边。按维度查和错题集，不需要。像这样直接，一目了然就行了。」
+所以**不要**再往回加这些：
+
+- 首页的欢迎页 hero、卡片列表、按光环 / 行业 / 结局的三维筛选器（`FacetSearch.vue`
+  和 `entries.data.ts` 已删，git 历史里有）。
+- 顶栏导航菜单。
+- 「错题集」这个说法出现在站点上（搜索框文案是「搜索文章」）。仓库内部叫法不变。
+
+文章多到需要分类时，在 `caseItems()` 里分组，别再加前端控件。
+
+### 子路径与链接
+
 **站点是项目站点，挂在 `/HowCompaniesFail/` 子路径下**（仓库名不是 `用户名.github.io`，
 GitHub 就只给子路径）。两条硬规矩：
 
 - `config.mts` 的 `base` 必须是 `/HowCompaniesFail/`，改仓库名或换域名时跟着改。
-- **手写的站内链接要过 `withBase()`**：`createContentLoader` 给的 url 不带前缀，
-  直接当 `href` 用会 404。2026-10-07 就是这么断的（卡片全指到 `/entries/…`）。
+- **手写的站内链接必须带前缀**：markdown 里写 `/HowCompaniesFail/xxx`，组件里用
+  `withBase()`。2026-10-07 就是这么断的（手写的 `href` 拿 `createContentLoader`
+  给的 url 直接用，全指到 `/entries/…`，卡片点进去 404）。
   `npm run check:base` 扫构建产物，没带前缀的就报错，CI 里也跑。
 
 ## 评论区运营

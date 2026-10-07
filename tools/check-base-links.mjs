@@ -6,6 +6,8 @@
 // 点进去全是 404。VitePress 自己生成的链接会带上 base，
 // 但**手写的 href 不会**——`createContentLoader` 给的 url 就不带，
 // 得自己过一遍 `withBase()`。改 base 的时候最容易漏这一处。
+// （那处 FacetSearch 后来整个删了，但只要是手写在 markdown 或组件里的链接，
+//   就还是这个毛病。改 base 或改仓库名之后一定要跑这一关。）
 //
 // 判据：产物里每个 href="/…" 和 src="/…" 都必须以 base 开头。
 // 跳过 // 开头的协议相对地址和外链。
@@ -67,7 +69,7 @@ if (problems.length) {
   console.error(`✗ 站内链接检查没通过，${problems.length} 处断链（base = ${BASE}）：\n`)
   for (const p of problems.slice(0, 40)) console.error('  · ' + p)
   if (problems.length > 40) console.error(`  … 还有 ${problems.length - 40} 处`)
-  console.error('\n  手写的 href 要过 withBase()，见 docs/.vitepress/theme/components/FacetSearch.vue')
+  console.error('\n  手写的站内链接要写成 /HowCompaniesFail/… 开头（组件里用 withBase()）')
   process.exit(1)
 }
 

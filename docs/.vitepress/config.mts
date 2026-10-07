@@ -47,17 +47,16 @@ export default defineConfig({
   head: [['meta', { name: 'theme-color', content: '#b8272c' }]],
 
   themeConfig: {
-    // 站点没有单独的欢迎页，首页就是概要和案例目录，所以导航里那个「首页」省了
-    nav: [
-      { text: '案例目录', link: '/' },
-      { text: '收录标准', link: '/about' },
-    ],
+    // 不放 nav。参照 HowToLiveBetter 那本：顶栏只有站名和搜索框，
+    // 文章和收录标准全在左边，读者一眼看得完。2026-10-07 用户定
+    // （「文章。收录标准都放侧边……像这样直接，一目了然就行了」）。
+    nav: [],
 
     // 每条案例都进左侧目录，从任何一页都能直接跳到别条
     sidebar: [
-      { text: '案例', items: caseItems() },
+      { text: '文章', items: caseItems() },
       {
-        text: '关于',
+        text: '收录标准',
         items: [{ text: '收录标准与立场', link: '/about' }],
       },
     ],
@@ -80,11 +79,11 @@ export default defineConfig({
           },
         },
         translations: {
-          button: { buttonText: '搜索错题', buttonAriaLabel: '搜索错题' },
+          button: { buttonText: '搜索文章', buttonAriaLabel: '搜索文章' },
           modal: {
             displayDetails: '显示详情',
             resetButtonTitle: '清除',
-            noResultsText: '没找到相关的错题',
+            noResultsText: '没找到相关的文章',
             footer: { selectText: '选择', navigateText: '切换', closeText: '关闭' },
           },
         },
