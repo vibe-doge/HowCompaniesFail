@@ -48,7 +48,17 @@ npm run check      # 校验条目格式
 
 复制 `docs/entries/_模板.md`，改名成 `NNN-公司名.md`，照模板填。
 
-格式规则写在 [CLAUDE.md](CLAUDE.md)，`npm run check` 会校验字段、六节顺序、免责声明是否逐字等于模板、避坑清单是不是正好 5 条，还会拦住正文里冒出来的「第 N 张」。
+格式规则写在 [CLAUDE.md](CLAUDE.md)，`npm run check` 会校验字段、七节顺序、免责声明是否逐字等于模板、避坑清单是不是正好 5 条，还会拦住正文里冒出来的「第 N 张」。
+
+## 写作 skill
+
+`.claude/skills/company-failure-longform/` 是写这类长文的方法总结：
+
+- `SKILL.md` —— 七节结构、深度从哪来的七个动作、写作禁令、去 AI 味清单、发布前自检
+- `references/exemplar-annotated.md` —— 一篇成品逐段拆解
+- `references/anti-patterns.md` —— 真实改过的 AI 味与结构病，改写前后对照
+
+用 Claude Code 打开这个仓库时它自动可见。产出是文章；封面文案和标签那套在小红书的生产 skill 里，不在这个仓库。
 
 ## 许可
 
