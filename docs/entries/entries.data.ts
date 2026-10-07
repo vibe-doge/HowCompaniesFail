@@ -3,12 +3,11 @@ import { createContentLoader } from 'vitepress'
 export interface Entry {
   url: string
   title: string
-  stage: string
-  risk: string
-  loss: string
-  consequence: string
-  evidence: string
-  source: string
+  company: string
+  halo: string
+  industry: string
+  ending: string
+  source_type: string
   checked: string
 }
 
@@ -26,25 +25,23 @@ export default createContentLoader('entries/*.md', {
   excerpt: false,
   transform(raw): Entry[] {
     return raw
-      // 只收真正的错题。要排掉两类：
-      //   index.md —— 本节的筛选页，不是错题
+      // 只收真正的条目。要排掉两类：
+      //   index.md —— 本节的筛选页，不是条目
       //   _模板.md —— srcExclude 只挡页面生成，挡不住这个 loader
       .filter(
         ({ url, frontmatter }) =>
           frontmatter.title &&
-          frontmatter.stage &&
-          frontmatter.evidence &&
+          frontmatter.halo &&
           !url.split('/').pop()!.startsWith('_'),
       )
       .map(({ url, frontmatter }) => ({
         url,
         title: String(frontmatter.title),
-        stage: String(frontmatter.stage ?? ''),
-        risk: String(frontmatter.risk ?? ''),
-        loss: String(frontmatter.loss ?? ''),
-        consequence: String(frontmatter.consequence ?? ''),
-        evidence: String(frontmatter.evidence ?? ''),
-        source: String(frontmatter.source ?? ''),
+        company: String(frontmatter.company ?? ''),
+        halo: String(frontmatter.halo ?? ''),
+        industry: String(frontmatter.industry ?? ''),
+        ending: String(frontmatter.ending ?? ''),
+        source_type: String(frontmatter.source_type ?? ''),
         checked: asDay(frontmatter.checked),
       }))
       .sort((a, b) => a.url.localeCompare(b.url, 'zh'))

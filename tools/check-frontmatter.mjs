@@ -2,12 +2,14 @@
 // 校验 docs/entries/ 下每一条错题的 frontmatter 与正文骨架是否合规。
 // 零依赖：frontmatter 全是扁平的 `key: value`，自己解析就够了，不引 YAML 库。
 //
-// 查五件事：
+// 查七件事：
 //   1. 必须有的字段一个不少
 //   2. 枚举字段的取值在允许范围内
 //   3. checked 是合法的 YYYY-MM-DD
-//   4. frontmatter 的 title 和正文的一级标题逐字一致
-//   5. 固定五段都在，顺序没乱
+//   4. industry 是自由填的，只查非空
+//   5. frontmatter 的 title 和正文的一级标题逐字一致
+//   6. 固定十段都在，顺序没乱
+//   7. 免责声明逐字等于固定模板，且不含具体媒体名称
 
 import { readFileSync, readdirSync } from 'node:fs'
 import { resolve, dirname, join } from 'node:path'
@@ -17,14 +19,35 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const DIR = join(ROOT, 'docs', 'entries')
 
 const ENUM = {
-  stage: ['想法', '合伙', '注册', '合同', '用工', '融资', '退出', '通用'],
-  risk: ['法律', '财税', '股权', '合同', '刑事', '用工', '知产'],
-  loss: ['大', '中', '小', '非金钱'],
-  consequence: ['赔钱', '公司没了', '失信', '刑责', '失去控制权'],
-  evidence: ['A', 'B', 'C'],
+  halo: ['大厂高管', '名校系', '明星名人', '资本宠儿', '其他'],
+  ending: ['破产清算', '破产重整', '失联跑路', '被限高', '公司解散'],
+  source_type: ['法院文书', '公开报道'],
 }
-const REQUIRED = ['title', ...Object.keys(ENUM), 'source', 'checked']
-const SECTIONS = ['【案例】', '【死因】', '【自检】', '【重来一次】', '【来源】']
+const REQUIRED = ['title', 'company', 'halo', 'industry', 'ending', 'source_type', 'checked']
+
+// 从「公司败局 · 小红书图文生产Skill」第五条抄下来的，一个字都不许动
+const DISCLAIMER =
+  '案例信息综合自公开报道及法院公开文书，仅作商业案例分析，不构成任何创业或投资建议。' +
+  '本账号已尽力核实信息，但不排除报道更新或细节偏差，读者请自行查证。'
+
+// 免责声明里绝对不能出现的媒体名称
+const BANNED_MEDIA = [
+  '界面新闻', '每日经济新闻', '红星资本局', '澎湃', '新京报', '财新', '第一财经',
+  '36氪', '虎嗅', '钛媒体', '中国新闻周刊', '南方周末', '北京商报', '证券时报',
+]
+
+const SECTIONS = [
+  '第 1 张（封面）',
+  '第 2 张（发生了什么）',
+  '第 3 张（为什么会走到这一步）',
+  '第 4 张（避坑清单）',
+  '第 5 张（一句话总结）',
+  '正文',
+  '免责声明',
+  '标签',
+  '互动',
+  '来源',
+]
 
 /** 解析文件开头的 --- ... --- 块，只认扁平的 scalar */
 function parse(raw) {
@@ -44,6 +67,18 @@ function parse(raw) {
   }
   return { fm, body: raw.slice(m[0].length) }
 }
+
+/** 取某个 `## 标题` 到下一个 `## ` 之间的正文 */
+function section(body, name) {
+  const start = body.indexOf(`## ${name}`)
+  if (start < 0) return null
+  const rest = body.slice(start + name.length + 3)
+  const next = rest.search(/^##\s/m)
+  return (next < 0 ? rest : rest.slice(0, next)).trim()
+}
+
+/** 比字符串时把换行和连续空格都压掉，只比内容 */
+const flat = (s) => s.replace(/\s+/g, '')
 
 const problems = []
 let checked = 0
@@ -74,6 +109,9 @@ for (const file of files) {
   if (fm.checked && !/^\d{4}-\d{2}-\d{2}$/.test(fm.checked)) {
     problems.push(`${where}：\`checked\` 要写成 YYYY-MM-DD，现在是「${fm.checked}」`)
   }
+  if (fm.title && [...fm.title].length > 20) {
+    problems.push(`${where}：\`title\` 超过 20 字（现在 ${[...fm.title].length} 字）`)
+  }
 
   // title 和一级标题逐字一致
   const h1 = /^#\s+(.+?)\s*$/m.exec(body)
@@ -87,7 +125,7 @@ for (const file of files) {
     )
   }
 
-  // 五段齐全且顺序正确
+  // 十段齐全且顺序正确
   let cursor = -1
   for (const s of SECTIONS) {
     const at = body.indexOf(`## ${s}`)
@@ -96,10 +134,40 @@ for (const file of files) {
       break
     }
     if (at < cursor) {
-      problems.push(`${where}：\`## ${s}\` 的顺序不对，五段要按【案例】【死因】【自检】【重来一次】【来源】排`)
+      problems.push(`${where}：\`## ${s}\` 的顺序不对，十段要按「第 1 张 → … → 第 5 张 → 正文 → 免责声明 → 标签 → 互动 → 来源」排`)
       break
     }
     cursor = at
+  }
+
+  // 免责声明必须逐字等于模板
+  const disc = section(body, '免责声明')
+  if (disc !== null && flat(disc) !== flat(DISCLAIMER)) {
+    problems.push(
+      `${where}：\`## 免责声明\` 不是固定模板，一个字都不许改\n` +
+        `        应为: ${DISCLAIMER}\n` +
+        `        实为: ${disc.replace(/\s+/g, ' ').slice(0, 120)}`,
+    )
+  }
+  if (disc) {
+    for (const m of BANNED_MEDIA) {
+      if (disc.includes(m)) {
+        problems.push(`${where}：免责声明里出现了媒体名称「${m}」，统一写「综合公开报道及法院公开文书」`)
+      }
+    }
+  }
+
+  // 封面左下角必须带公司名，格式固定
+  const cover = section(body, '第 1 张（封面）')
+  if (cover && fm.company && !cover.includes(`公司败局 ${fm.company}`)) {
+    problems.push(`${where}：封面左下角要写「公司败局 ${fm.company}」`)
+  }
+
+  // 第 4 张避坑清单要 5 条
+  const list = section(body, '第 4 张（避坑清单）')
+  if (list) {
+    const n = list.split(/\r?\n/).filter(l => /^\s*\d+[.、]\s*\S/.test(l)).length
+    if (n !== 5) problems.push(`${where}：第 4 张避坑清单要正好 5 条，现在是 ${n} 条`)
   }
 }
 

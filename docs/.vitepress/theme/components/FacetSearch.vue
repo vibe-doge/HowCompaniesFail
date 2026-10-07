@@ -3,11 +3,9 @@ import { computed, ref } from 'vue'
 import { data as entries } from '../../../entries/entries.data'
 
 const DIMS = [
-  { key: 'stage', label: '阶段' },
-  { key: 'risk', label: '风险类型' },
-  { key: 'loss', label: '损失量级' },
-  { key: 'consequence', label: '最坏后果' },
-  { key: 'evidence', label: '证据等级' },
+  { key: 'halo', label: '光环' },
+  { key: 'industry', label: '行业' },
+  { key: 'ending', label: '结局' },
 ] as const
 
 type DimKey = (typeof DIMS)[number]['key']
@@ -48,7 +46,7 @@ const filtered = computed(() => {
     for (const [k, vs] of Object.entries(active.value)) {
       if (vs.length && !vs.includes(e[k as DimKey])) return false
     }
-    if (kw && !(e.title.includes(kw) || e.source.includes(kw))) return false
+    if (kw && !(e.title.includes(kw) || e.company.includes(kw))) return false
     return true
   })
 })
@@ -59,7 +57,7 @@ const hasFilter = computed(() => q.value.trim() !== '' || Object.values(active.v
 <template>
   <div class="fs">
     <div class="fs-bar">
-      <input v-model="q" class="fs-q" type="search" placeholder="搜标题或案号" aria-label="搜索" />
+      <input v-model="q" class="fs-q" type="search" placeholder="搜标题或公司名" aria-label="搜索" />
       <span class="fs-cnt">显示 {{ filtered.length }} / {{ entries.length }} 条</span>
       <button v-if="hasFilter" class="fs-reset" type="button" @click="reset">清空</button>
     </div>
@@ -87,16 +85,18 @@ const hasFilter = computed(() => q.value.trim() !== '' || Object.values(active.v
       <li v-for="e in filtered" :key="e.url" class="fs-card">
         <a class="fs-title" :href="e.url">{{ e.title }}</a>
         <div class="fs-meta">
-          <span class="fs-tag">{{ e.stage }}</span>
-          <span class="fs-tag">{{ e.risk }}</span>
-          <span class="fs-tag">损失{{ e.loss }}</span>
-          <span class="fs-tag">{{ e.consequence }}</span>
-          <span class="fs-tag" :class="'ev-' + e.evidence">{{ e.evidence }} 级</span>
+          <span class="fs-tag">{{ e.halo }}</span>
+          <span class="fs-tag">{{ e.industry }}</span>
+          <span class="fs-tag">{{ e.ending }}</span>
+          <span class="fs-tag" :class="'src-' + (e.source_type === '法院文书' ? 'court' : 'media')">
+            {{ e.source_type }}
+          </span>
         </div>
+        <p class="fs-co">{{ e.company }}</p>
       </li>
     </ul>
 
-    <p v-else class="fs-empty">没有匹配的错题。去掉一个条件，或者换个更短的关键词。</p>
+    <p v-else class="fs-empty">没有匹配的条目。去掉一个条件，或者换个更短的关键词。</p>
   </div>
 </template>
 
@@ -200,17 +200,19 @@ const hasFilter = computed(() => q.value.trim() !== '' || Object.values(active.v
   background: var(--vp-c-default-soft);
   color: var(--vp-c-text-2);
 }
-.ev-A {
+/* 两档来源：法院文书 = 绿，公开报道 = 灰 */
+.src-court {
   background: rgba(24, 121, 78, 0.14);
   color: #18794e;
 }
-.ev-B {
-  background: rgba(145, 89, 48, 0.14);
-  color: #915930;
-}
-.ev-C {
+.src-media {
   background: rgba(140, 140, 140, 0.16);
   color: var(--vp-c-text-2);
+}
+.fs-co {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--vp-c-text-3);
 }
 .fs-empty {
   margin-top: 2rem;
