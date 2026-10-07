@@ -8,8 +8,10 @@
 //   3. checked 是合法的 YYYY-MM-DD
 //   4. industry 是自由填的，只查非空
 //   5. frontmatter 的 title 和正文的一级标题逐字一致
-//   6. 固定十段都在，顺序没乱
+//   6. 固定七节都在，顺序没乱
 //   7. 免责声明逐字等于固定模板，且不含具体媒体名称
+// 外加一条：正文里不许出现「第 N 张」——那是小红书发布包里的话，不是文章的话。
+// 这个仓库只存文章，封面文案、标签、互动在 skill 那边维护。
 
 import { readFileSync, readdirSync } from 'node:fs'
 import { resolve, dirname, join } from 'node:path'
@@ -36,16 +38,14 @@ const BANNED_MEDIA = [
   '36氪', '虎嗅', '钛媒体', '中国新闻周刊', '南方周末', '北京商报', '证券时报',
 ]
 
+// 站点上一条错题 = 一篇文章，不是小红书的施工单。
 const SECTIONS = [
-  '第 1 张（封面）',
-  '第 2 张（发生了什么）',
-  '第 3 张（为什么会走到这一步）',
-  '第 4 张（避坑清单）',
-  '第 5 张（一句话总结）',
-  '正文',
+  '这门生意是怎么赚钱的',
+  '事情是怎么发生的',
+  '为什么会走到这一步',
+  '这套判断能用在哪儿',
+  '避坑清单',
   '免责声明',
-  '标签',
-  '互动',
   '来源',
 ]
 
@@ -134,7 +134,7 @@ for (const file of files) {
       break
     }
     if (at < cursor) {
-      problems.push(`${where}：\`## ${s}\` 的顺序不对，十段要按「第 1 张 → … → 第 5 张 → 正文 → 免责声明 → 标签 → 互动 → 来源」排`)
+      problems.push(`${where}：\`## ${s}\` 的顺序不对，七节要按「这门生意是怎么赚钱的 → 事情是怎么发生的 → 为什么会走到这一步 → 这套判断能用在哪儿 → 避坑清单 → 免责声明 → 来源」排`)
       break
     }
     cursor = at
@@ -157,17 +157,20 @@ for (const file of files) {
     }
   }
 
-  // 封面左下角必须带公司名，格式固定
-  const cover = section(body, '第 1 张（封面）')
-  if (cover && fm.company && !cover.includes(`公司败局 ${fm.company}`)) {
-    problems.push(`${where}：封面左下角要写「公司败局 ${fm.company}」`)
-  }
-
-  // 第 4 张避坑清单要 5 条
-  const list = section(body, '第 4 张（避坑清单）')
+  // 避坑清单要 5 条
+  const list = section(body, '避坑清单')
   if (list) {
     const n = list.split(/\r?\n/).filter(l => /^\s*\d+[.、]\s*\S/.test(l)).length
-    if (n !== 5) problems.push(`${where}：第 4 张避坑清单要正好 5 条，现在是 ${n} 条`)
+    if (n !== 5) problems.push(`${where}：避坑清单要正好 5 条，现在是 ${n} 条`)
+  }
+
+  // 「第 N 张」是发布包里的话，文章里一律不许出现
+  const zb = /第\s*\d+\s*张/.exec(body)
+  if (zb) {
+    problems.push(
+      `${where}：正文里出现了「${zb[0]}」。这个仓库只存文章，不是五张图的施工单；` +
+        `封面文案、标签、互动在 skill 那边维护`,
+    )
   }
 }
 
