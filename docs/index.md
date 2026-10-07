@@ -2,9 +2,9 @@
 layout: home
 
 hero:
-  name: HowCompaniesFail
-  text: 公司败局
-  tagline: 每期解剖一家真实倒闭的公司。不写成功学，只写失败学。
+  name: 公司败局案例集
+  text: 每期解剖一家真实倒闭的公司
+  tagline: 只讲可查证的事实，只列能用的避坑清单。不写成功学，只写失败学。
   actions:
     - theme: brand
       text: 按维度查错题
