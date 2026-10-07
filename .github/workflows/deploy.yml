@@ -1,0 +1,62 @@
+# 构建 VitePress 站点并发到 GitHub Pages。
+# 地址：https://serendipitydevin.github.io/HowCompaniesFail/
+#
+# 第一次跑的时候，configure-pages 的 enablement: true 会自动把仓库的
+# Pages 打开（Settings → Pages → Source 变成 GitHub Actions），不用手动点。
+# 如果那一步报权限错，去 Settings → Pages 把 Source 手动选成 "GitHub Actions" 即可。
+name: 部署站点
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # lastUpdated 靠 git 历史算「最后核实」，浅克隆会算错
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - run: npm ci
+
+      # 格式不合规就别发出去
+      - name: 校验条目格式
+        run: node tools/check-frontmatter.mjs
+
+      - name: 构建
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.vitepress/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

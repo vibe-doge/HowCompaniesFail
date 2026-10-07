@@ -1,0 +1,24 @@
+/* 中文优先的字体栈：VitePress 默认栈里中文字体靠后，粗体常常掉到合成粗体 */
+:root {
+  --vp-font-family-base: "Inter", ui-sans-serif, system-ui, -apple-system,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --vp-c-brand-1: #b8272c;
+  --vp-c-brand-2: #a01f24;
+  --vp-c-brand-3: #8d1a1f;
+  --vp-c-brand-soft: rgba(184, 39, 44, 0.14);
+}
+
+/* 正文行高放宽一点，长句读起来不挤 */
+.vp-doc p,
+.vp-doc li {
+  line-height: 1.75;
+}
+
+/* 【案例】【死因】这类小标题是条目的骨架，给点分量 */
+.vp-doc h2 {
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--vp-c-divider);
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
